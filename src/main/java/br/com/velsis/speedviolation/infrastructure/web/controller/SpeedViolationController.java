@@ -9,6 +9,9 @@ import br.com.velsis.speedviolation.infrastructure.web.dto.EvaluateSpeedResponse
 import br.com.velsis.speedviolation.infrastructure.web.dto.ViolationRecordResponse;
 import br.com.velsis.speedviolation.infrastructure.web.exception.GlobalExceptionHandler;
 import br.com.velsis.speedviolation.infrastructure.web.validator.SpeedReadingRequestValidator;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +30,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/v1/violations")
+@Tag(name = "Speed Violations", description = "Avaliação de leituras de velocidade e consulta de infrações registradas")
 public class SpeedViolationController {
 
     private static final Logger log = LoggerFactory.getLogger(SpeedViolationController.class);
@@ -46,7 +50,12 @@ public class SpeedViolationController {
     }
 
     @PostMapping("/evaluate")
+    @Operation(
+            summary = "Avaliar leitura de velocidade",
+            description = "Aplica a margem de tolerância configurada, calcula eventual excesso e gravidade conforme o CTB e persiste a infração quando caracterizada."
+    )
     public ResponseEntity<EvaluateSpeedResponse> evaluate(
+            @Parameter(description = "Origem da captura (FIXED, MOBILE ou HANDHELD)", required = true, example = "FIXED")
             @RequestHeader(value = "x-origin", required = false) String origin,
             @RequestBody(required = false) EvaluateSpeedRequest request
     ) {
@@ -64,7 +73,12 @@ public class SpeedViolationController {
     }
 
     @GetMapping
+    @Operation(
+            summary = "Consultar infrações por placa",
+            description = "Retorna todas as infrações registradas em memória para a placa informada (formato antigo ou Mercosul)."
+    )
     public ResponseEntity<List<ViolationRecordResponse>> findByLicensePlate(
+            @Parameter(description = "Placa do veículo (ex: ABC1234 ou ABC1D23)", required = true, example = "ABC1D23")
             @RequestParam(value = "licensePlate", required = false) String licensePlate
     ) {
         storeLicensePlateContext(licensePlate);

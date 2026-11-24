@@ -1,0 +1,220 @@
+{
+  "info": {
+    "name": "Speed Violation Service",
+    "description": "Collection para avaliação de leituras de velocidade e consulta de infrações registradas.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    }
+  ],
+  "item": [
+    {
+      "name": "Avaliações com Infração",
+      "item": [
+        {
+          "name": "Infração Média (218-I, <= 20%)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "x-origin", "value": "FIXED" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"licensePlate\": \"ABC1D23\",\n  \"measuredSpeed\": 127,\n  \"speedLimit\": 100,\n  \"equipmentId\": \"EQ-001\",\n  \"captureTimestamp\": \"2026-11-24T12:00:00Z\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/violations/evaluate",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "violations", "evaluate"]
+            }
+          }
+        },
+        {
+          "name": "Infração Grave (218-II, > 20% e <= 50%)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "x-origin", "value": "MOBILE" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"licensePlate\": \"ABC1234\",\n  \"measuredSpeed\": 137,\n  \"speedLimit\": 100,\n  \"equipmentId\": \"EQ-002\",\n  \"captureTimestamp\": \"2026-11-24T12:05:00Z\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/violations/evaluate",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "violations", "evaluate"]
+            }
+          }
+        },
+        {
+          "name": "Infração Gravíssima (218-III, > 50%)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "x-origin", "value": "HANDHELD" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"licensePlate\": \"XYZ9K88\",\n  \"measuredSpeed\": 160,\n  \"speedLimit\": 100,\n  \"equipmentId\": \"EQ-003\",\n  \"captureTimestamp\": \"2026-11-24T12:10:00Z\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/violations/evaluate",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "violations", "evaluate"]
+            }
+          }
+        },
+        {
+          "name": "Infração em Via > 100 km/h (Margem Percentual)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "x-origin", "value": "FIXED" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"licensePlate\": \"BRA2E19\",\n  \"measuredSpeed\": 130,\n  \"speedLimit\": 110,\n  \"equipmentId\": \"EQ-004\",\n  \"captureTimestamp\": \"2026-11-24T12:15:00Z\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/violations/evaluate",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "violations", "evaluate"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Avaliação sem Infração",
+      "item": [
+        {
+          "name": "Dentro da Tolerância (Não persiste)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "x-origin", "value": "FIXED" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"licensePlate\": \"DEF5678\",\n  \"measuredSpeed\": 67,\n  \"speedLimit\": 60,\n  \"equipmentId\": \"EQ-005\",\n  \"captureTimestamp\": \"2026-11-24T12:20:00Z\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/violations/evaluate",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "violations", "evaluate"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Consultas",
+      "item": [
+        {
+          "name": "Consultar Infrações por Placa",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/violations?licensePlate=ABC1D23",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "violations"],
+              "query": [
+                { "key": "licensePlate", "value": "ABC1D23" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cenários de Erro (400 Bad Request)",
+      "item": [
+        {
+          "name": "Placa Inválida (INVALID_LICENSE_PLATE)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "x-origin", "value": "FIXED" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"licensePlate\": \"INVALID\",\n  \"measuredSpeed\": 120,\n  \"speedLimit\": 100,\n  \"equipmentId\": \"EQ-001\",\n  \"captureTimestamp\": \"2026-11-24T12:00:00Z\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/violations/evaluate",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "violations", "evaluate"]
+            }
+          }
+        },
+        {
+          "name": "Origem Inválida / Case-sensitive (INVALID_ORIGIN)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "x-origin", "value": "fixed" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"licensePlate\": \"ABC1D23\",\n  \"measuredSpeed\": 120,\n  \"speedLimit\": 100,\n  \"equipmentId\": \"EQ-001\",\n  \"captureTimestamp\": \"2026-11-24T12:00:00Z\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/violations/evaluate",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "violations", "evaluate"]
+            }
+          }
+        },
+        {
+          "name": "Timestamp no Futuro (FUTURE_CAPTURE_TIMESTAMP)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "x-origin", "value": "FIXED" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"licensePlate\": \"ABC1D23\",\n  \"measuredSpeed\": 120,\n  \"speedLimit\": 100,\n  \"equipmentId\": \"EQ-001\",\n  \"captureTimestamp\": \"2099-01-01T00:00:00Z\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/violations/evaluate",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "violations", "evaluate"]
+            }
+          }
+        },
+        {
+          "name": "JSON Malformado (MALFORMED_REQUEST)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "x-origin", "value": "FIXED" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"licensePlate\": \"ABC1D23\", \"measuredSpeed\": \"invalido\" }"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/violations/evaluate",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "violations", "evaluate"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
