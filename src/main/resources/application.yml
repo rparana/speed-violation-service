@@ -10,3 +10,12 @@ speed-violation:
     fixed-margin-kmh: ${TOLERANCE_FIXED_KMH:7}
     percentage-margin: ${TOLERANCE_PERCENTAGE:7}
     speed-limit-threshold: ${TOLERANCE_SPEED_THRESHOLD:100}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+  endpoint:
+    health:
+      show-details: when-authorized

@@ -152,6 +152,19 @@ Resposta `400 Bad Request`:
 
 ---
 
+## Observabilidade (Actuator & Prometheus)
+
+A aplicação expõe apenas os endpoints essenciais de observabilidade via Spring Boot Actuator e Micrometer Prometheus (`management.endpoints.web.exposure.include: health,prometheus`), com detalhes de health restritos a requisições autorizadas (`show-details: when-authorized`):
+
+- **Health Check**: `GET /actuator/health`
+- **Métricas Prometheus**: `GET /actuator/prometheus`
+
+Métricas de negócio registradas sem acoplar o domínio a frameworks (via interface pura `SpeedMetricsRecorder`):
+- `speed_evaluations_total` (tag `origin`: `FIXED`, `MOBILE`, `HANDHELD`)
+- `speed_violations_total` (tags `origin` e `severity`: `MEDIUM`, `SERIOUS`, `VERY_SERIOUS`)
+
+---
+
 ## Testes e Cobertura de Código (JaCoCo)
 
 Para executar todos os testes unitários, testes de integração e validar o mínimo de 80% de cobertura de instruções no pacote `domain`:
@@ -161,3 +174,35 @@ Para executar todos os testes unitários, testes de integração e validar o mí
 
 Após a execução, o relatório HTML do JaCoCo fica disponível em:
 - `target/site/jacoco/index.html`
+
+---
+
+## Melhorias Futuras (Roadmap Arquitetural)
+
+Pensando na evolução do serviço para um ambiente produtivo de alto volume na fiscalização viária:
+
+1. **Persistência Relacional e Consultas Avançadas**:
+   - Substituir o `InMemoryViolationRepository` por um adaptador PostgreSQL com **Flyway/Liquibase**, índice composto `(license_plate, capture_timestamp DESC)`, particionamento por data e **paginação/filtros** no `GET /api/v1/violations`.
+2. **Idempotência e Mensageria Assíncrona**:
+   - Adicionar chave de idempotência (ex.: `equipmentId + licensePlate + captureTimestamp`) para evitar duplicidade em retentativas de radares em campo.
+   - Desacoplar picos de ingestão via **Kafka/RabbitMQ** com **Dead Letter Queue (DLQ)**.
+3. **Observabilidade Avançada**:
+   - Adicionar **OpenTelemetry** para tracing distribuído e `correlationId` no `MDC` dos logs estruturados em JSON.
+4. **Evolução das Regras de Domínio**:
+   - Versionamento temporal da `TolerancePolicy` conforme resoluções vigentes na data da captura, regras por tipo de veículo (leve vs. pesado) e validação de aferição/status do equipamento (`equipmentId`).
+5. **Segurança e Compliance (LGPD)**:
+   - Autenticação/autorização (OAuth2/JWT ou mTLS/API Keys por equipamento), rate limiting por cliente/equipamento e mascaramento de placas em logs produtivos quando aplicável.
+6. **Qualidade Contínua**:
+   - Testes de mutação (**PITest**) sobre o domínio, **Testcontainers** para testes com banco/broker reais, análise estática (SpotBugs/Sonar) e scan de vulnerabilidades da imagem Docker (Trivy) no CI.
+
+---
+
+## Uso de IA no Desenvolvimento
+
+Este projeto foi desenvolvido com apoio de inteligência artificial em fluxo assistido por humano:
+
+- **Agente de Desenvolvimento**: **Antigravity** (Google DeepMind) integrado ao ambiente de desenvolvimento.
+- **Modelo (LLM)**: **Gemini 4 Hydrogen**.
+- **Forma de Utilização**:
+  - Estruturação incremental do projeto em Clean Architecture, criação de boilerplate (records, DTOs, configurações OpenAPI, Dockerfile, CI e collections Postman/Insomnia) e geração de cenários de testes unitários e de integração.
+  - Todas as decisões arquiteturais, regras de negócio do domínio, revisões de código, validações e execuções de build/testes (`./mvnw clean verify`) foram conduzidas e verificadas durante o processo.
