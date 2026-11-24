@@ -1,0 +1,282 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-11-24T13:21:00.000Z",
+  "__export_source": "insomnia.desktop.app:v9.0.0",
+  "resources": [
+    {
+      "_id": "wrk_speed_violation",
+      "_type": "workspace",
+      "parentId": null,
+      "name": "Speed Violation Service",
+      "description": "Collection para avaliação de leituras de velocidade e consulta de infrações registradas.",
+      "scope": "collection"
+    },
+    {
+      "_id": "env_speed_violation_base",
+      "_type": "environment",
+      "parentId": "wrk_speed_violation",
+      "name": "Base Environment",
+      "data": {
+        "baseUrl": "http://localhost:8080"
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "baseUrl"
+        ]
+      },
+      "isPrivate": false,
+      "metaSortKey": 1700000000000
+    },
+    {
+      "_id": "fld_violations",
+      "_type": "request_group",
+      "parentId": "wrk_speed_violation",
+      "name": "Avaliações com Infração",
+      "metaSortKey": -4000
+    },
+    {
+      "_id": "fld_no_violation",
+      "_type": "request_group",
+      "parentId": "wrk_speed_violation",
+      "name": "Avaliação sem Infração",
+      "metaSortKey": -3000
+    },
+    {
+      "_id": "fld_queries",
+      "_type": "request_group",
+      "parentId": "wrk_speed_violation",
+      "name": "Consultas",
+      "metaSortKey": -2000
+    },
+    {
+      "_id": "fld_errors",
+      "_type": "request_group",
+      "parentId": "wrk_speed_violation",
+      "name": "Cenários de Erro (400 Bad Request)",
+      "metaSortKey": -1000
+    },
+    {
+      "_id": "req_medium_violation",
+      "_type": "request",
+      "parentId": "fld_violations",
+      "name": "Infração Média (218-I, <= 20%)",
+      "method": "POST",
+      "url": "{{ _.baseUrl }}/api/v1/violations/evaluate",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "x-origin",
+          "value": "FIXED"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"licensePlate\": \"ABC1D23\",\n  \"measuredSpeed\": 127,\n  \"speedLimit\": 100,\n  \"equipmentId\": \"EQ-001\",\n  \"captureTimestamp\": \"2026-11-24T12:00:00Z\"\n}"
+      },
+      "metaSortKey": -4000
+    },
+    {
+      "_id": "req_serious_violation",
+      "_type": "request",
+      "parentId": "fld_violations",
+      "name": "Infração Grave (218-II, > 20% e <= 50%)",
+      "method": "POST",
+      "url": "{{ _.baseUrl }}/api/v1/violations/evaluate",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "x-origin",
+          "value": "MOBILE"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"licensePlate\": \"ABC1234\",\n  \"measuredSpeed\": 137,\n  \"speedLimit\": 100,\n  \"equipmentId\": \"EQ-002\",\n  \"captureTimestamp\": \"2026-11-24T12:05:00Z\"\n}"
+      },
+      "metaSortKey": -3000
+    },
+    {
+      "_id": "req_very_serious_violation",
+      "_type": "request",
+      "parentId": "fld_violations",
+      "name": "Infração Gravíssima (218-III, > 50%)",
+      "method": "POST",
+      "url": "{{ _.baseUrl }}/api/v1/violations/evaluate",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "x-origin",
+          "value": "HANDHELD"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"licensePlate\": \"XYZ9K88\",\n  \"measuredSpeed\": 160,\n  \"speedLimit\": 100,\n  \"equipmentId\": \"EQ-003\",\n  \"captureTimestamp\": \"2026-11-24T12:10:00Z\"\n}"
+      },
+      "metaSortKey": -2000
+    },
+    {
+      "_id": "req_above_100_violation",
+      "_type": "request",
+      "parentId": "fld_violations",
+      "name": "Infração em Via > 100 km/h (Margem Percentual)",
+      "method": "POST",
+      "url": "{{ _.baseUrl }}/api/v1/violations/evaluate",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "x-origin",
+          "value": "FIXED"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"licensePlate\": \"BRA2E19\",\n  \"measuredSpeed\": 130,\n  \"speedLimit\": 110,\n  \"equipmentId\": \"EQ-004\",\n  \"captureTimestamp\": \"2026-11-24T12:15:00Z\"\n}"
+      },
+      "metaSortKey": -1000
+    },
+    {
+      "_id": "req_no_violation",
+      "_type": "request",
+      "parentId": "fld_no_violation",
+      "name": "Dentro da Tolerância (Não persiste)",
+      "method": "POST",
+      "url": "{{ _.baseUrl }}/api/v1/violations/evaluate",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "x-origin",
+          "value": "FIXED"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"licensePlate\": \"DEF5678\",\n  \"measuredSpeed\": 67,\n  \"speedLimit\": 60,\n  \"equipmentId\": \"EQ-005\",\n  \"captureTimestamp\": \"2026-11-24T12:20:00Z\"\n}"
+      },
+      "metaSortKey": -1000
+    },
+    {
+      "_id": "req_get_by_plate",
+      "_type": "request",
+      "parentId": "fld_queries",
+      "name": "Consultar Infrações por Placa",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/v1/violations",
+      "parameters": [
+        {
+          "name": "licensePlate",
+          "value": "ABC1D23"
+        }
+      ],
+      "metaSortKey": -1000
+    },
+    {
+      "_id": "req_err_invalid_plate",
+      "_type": "request",
+      "parentId": "fld_errors",
+      "name": "Placa Inválida (INVALID_LICENSE_PLATE)",
+      "method": "POST",
+      "url": "{{ _.baseUrl }}/api/v1/violations/evaluate",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "x-origin",
+          "value": "FIXED"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"licensePlate\": \"INVALID\",\n  \"measuredSpeed\": 120,\n  \"speedLimit\": 100,\n  \"equipmentId\": \"EQ-001\",\n  \"captureTimestamp\": \"2026-11-24T12:00:00Z\"\n}"
+      },
+      "metaSortKey": -4000
+    },
+    {
+      "_id": "req_err_invalid_origin",
+      "_type": "request",
+      "parentId": "fld_errors",
+      "name": "Origem Inválida / Case-sensitive (INVALID_ORIGIN)",
+      "method": "POST",
+      "url": "{{ _.baseUrl }}/api/v1/violations/evaluate",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "x-origin",
+          "value": "fixed"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"licensePlate\": \"ABC1D23\",\n  \"measuredSpeed\": 120,\n  \"speedLimit\": 100,\n  \"equipmentId\": \"EQ-001\",\n  \"captureTimestamp\": \"2026-11-24T12:00:00Z\"\n}"
+      },
+      "metaSortKey": -3000
+    },
+    {
+      "_id": "req_err_future_timestamp",
+      "_type": "request",
+      "parentId": "fld_errors",
+      "name": "Timestamp no Futuro (FUTURE_CAPTURE_TIMESTAMP)",
+      "method": "POST",
+      "url": "{{ _.baseUrl }}/api/v1/violations/evaluate",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "x-origin",
+          "value": "FIXED"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"licensePlate\": \"ABC1D23\",\n  \"measuredSpeed\": 120,\n  \"speedLimit\": 100,\n  \"equipmentId\": \"EQ-001\",\n  \"captureTimestamp\": \"2099-01-01T00:00:00Z\"\n}"
+      },
+      "metaSortKey": -2000
+    },
+    {
+      "_id": "req_err_malformed_json",
+      "_type": "request",
+      "parentId": "fld_errors",
+      "name": "JSON Malformado (MALFORMED_REQUEST)",
+      "method": "POST",
+      "url": "{{ _.baseUrl }}/api/v1/violations/evaluate",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "x-origin",
+          "value": "FIXED"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{ \"licensePlate\": \"ABC1D23\", \"measuredSpeed\": \"invalido\" }"
+      },
+      "metaSortKey": -1000
+    }
+  ]
+}

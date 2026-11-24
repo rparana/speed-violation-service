@@ -50,10 +50,15 @@ docker build -t speed-violation-service .
 docker run -p 8080:8080 -e SERVER_PORT=8080 speed-violation-service
 ```
 
-### Documentação Interativa (Swagger UI) e Postman
-- **Swagger UI**: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
-- **OpenAPI JSON**: [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
+### Ambiente Público
+- **URL Pública da Aplicação**: [https://velsis.rafaelparana.me](https://velsis.rafaelparana.me)
+- **Swagger UI (Público)**: [https://velsis.rafaelparana.me/swagger-ui.html](https://velsis.rafaelparana.me/swagger-ui.html)
+
+### Documentação Interativa (Swagger UI), Postman e Insomnia
+- **Swagger UI (Local)**: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+- **OpenAPI JSON (Local)**: [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
 - **Postman Collection v2.1**: disponível em `docs/speed-violation-service.postman_collection.json`.
+- **Insomnia Collection v4**: disponível em `docs/speed-violation-service.insomnia_collection.json`.
 
 ---
 
