@@ -1,0 +1,12 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: speed-violation-service
+
+speed-violation:
+  tolerance:
+    fixed-margin-kmh: ${TOLERANCE_FIXED_KMH:7}
+    percentage-margin: ${TOLERANCE_PERCENTAGE:7}
+    speed-limit-threshold: ${TOLERANCE_SPEED_THRESHOLD:100}
